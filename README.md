@@ -24,9 +24,9 @@ SUPSI 2025
 - [Esercizio 2: parallasse interattivo](http://gregorioriva.github.io/gim/esercizio_2/multiplane_interattivo)
 
 ### Esercizio 3A
+- [Esercizio 3A: pong](http://gregorioriva.github.io/gim/esercizio_3A/pong)
 - [Esercizio 3A: neve](http://gregorioriva.github.io/gim/esercizio_3A/neve)
 - [Esercizio 3A: pioggia](http://gregorioriva.github.io/gim/esercizio_3A/pioggia)
-- [Esercizio 3A: pong](http://gregorioriva.github.io/gim/esercizio_3A/pong)
 
 ### Esercizio 3B
 - [Esercizio 3B: orologio-clessidra](http://gregorioriva.github.io/gim/esercizio_3B)
