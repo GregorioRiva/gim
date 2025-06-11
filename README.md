@@ -29,4 +29,4 @@ SUPSI 2025
 - [Esercizio 3A: pong](http://gregorioriva.github.io/gim/esercizio_3A/pong)
 
 ### Esercizio 3B
-- [Esercizio 3B: orologio-clessidra](http://gregorioriva.github.io/gim/esercizio_3B/clessidra)
+- [Esercizio 3B: orologio-clessidra](http://gregorioriva.github.io/gim/esercizio_3B)
