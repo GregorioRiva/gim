@@ -52,8 +52,6 @@ class Clessidra {
     this.rotation = 0;
     this.rotating = false;
     this.rotationProgress = 0; // da 0 a 1
-    this.flipPending = false;
-    this.flipped = false;
   }
 
   update(value) {
@@ -65,61 +63,74 @@ class Clessidra {
     if (currentInt < this.prevInt && !this.rotating) {
       this.rotating = true;
       this.rotationProgress = 0;
-      this.flipped = !this.flipped; 
     }
     this.prevInt = currentInt;
 
     if (this.rotating) {
       this.rotationProgress += 0.1;
       if (this.rotationProgress >= 1) {
-        this.rotationProgress = 0;
+        this.rotationProgress = 1;
         this.rotating = false;
       }
     }
 
-    this.rotation = this.rotating ? PI * this.rotationProgress : 0;
+    this.rotation = PI * this.rotationProgress;
   }
+
+display(showLabel) {
+  push();
+  translate(this.x, this.y);
+  rotate(this.rotation);
+
+  const ratio = this.value / this.max;
+  const upperY = -this.h / 2;
+  const lowerY = this.h / 2;
+
+  // La clessidra è visivamente capovolta?
+  const isFlipped = this.rotationProgress >= 0.5;
+
+  // Logica coerente con rotazione: sabbia scende visivamente
+  let upperFill = isFlipped ? ratio : 1 - ratio;
+  let lowerFill = isFlipped ? 1 - ratio : ratio;
+
+  let yCutTop = lerp(upperY, 0, upperFill);
+  let yCutBottom = lerp(lowerY, 0, lowerFill);
+
+  // Triangoli clessidra
+  fill(40);
+  triangle(-this.w / 2, upperY, this.w / 2, upperY, 0, 0);
+  triangle(-this.w / 2, lowerY, this.w / 2, lowerY, 0, 0);
+
+  // Sabbia superiore
+  fill(this.col);
+  beginShape();
+  vertex(-this.w / 2, upperY);
+  vertex(this.w / 2, upperY);
+  vertex(0, yCutTop);
+  endShape(CLOSE);
+
+  // Sabbia inferiore
+  beginShape();
+  vertex(-this.w / 2, lowerY);
+  vertex(this.w / 2, lowerY);
+  vertex(0, yCutBottom);
+  endShape(CLOSE);
   
-  display(showLabel) {
-    push();
-    translate(this.x, this.y);
-    rotate(this.rotation);
+  // Goccia
+  let frac = this.value % 1;
+  let dropY = isFlipped
+    ? lerp(yCutBottom - 6, yCutTop + 6, frac)
+    : lerp(yCutTop + 6, yCutBottom - 6, frac);
+  ellipse(0, dropY, 8, 8);
 
-    const ratio = this.value / this.max;
-    const upperY = -this.h / 2;
-    const lowerY = this.h / 2;
+  pop();
 
-    fill(40);
-    triangle(-this.w / 2, upperY, this.w / 2, upperY, 0, 0);
-    triangle(-this.w / 2, lowerY, this.w / 2, lowerY, 0, 0);
-
-    let yCutTop = lerp(upperY, 0, this.flipped ? ratio : 1 - ratio);
-    let yCutBottom = lerp(lowerY, 0, this.flipped ? 1 - ratio : ratio);
-
-    fill(this.col);
-    beginShape();
-    vertex(-this.w / 2, upperY);
-    vertex(this.w / 2, upperY);
-    vertex(0, yCutTop);
-    endShape(CLOSE);
-
-    beginShape();
-    vertex(-this.w / 2, lowerY);
-    vertex(this.w / 2, lowerY);
-    vertex(0, yCutBottom);
-    endShape(CLOSE);
-
-    let frac = this.value % 1;
-    let dropY = lerp(yCutTop + 6, yCutBottom - 6, frac);
-    ellipse(0, dropY, 8, 8);
-
-    if (showLabel) {
-      fill(255, 100);
-      textAlign(CENTER, CENTER);
-      textSize(32);
-      text(nf(floor(this.value), 2), 0, 0);
-    }
-
-    pop();
+  // Numero centrato NON ruotato
+  if (showLabel) {
+    fill(255, 100);
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    text(nf(floor(this.value), 2), this.x, this.y);
   }
+}
 }
